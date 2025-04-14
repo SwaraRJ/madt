@@ -1,0 +1,29 @@
+imagechange
+
+public class MainActivity extends AppCompatActivity {
+
+    ImageView imageView;
+    Button changeImageBtn;
+    boolean isImage1 = true;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        imageView = findViewById(R.id.imageView);
+        changeImageBtn = findViewById(R.id.changeImageBtn);
+
+        changeImageBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (isImage1) {
+                    imageView.setImageResource(R.drawable.img_1);
+                } else {
+                    imageView.setImageResource(R.drawable.img);
+                }
+                isImage1 = !isImage1;
+            }
+        });
+    }
+}

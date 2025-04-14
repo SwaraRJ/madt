@@ -1,0 +1,76 @@
+listview search delete insert
+
+package com.example.listexp;
+
+import android.os.Bundle;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ListView;
+import android.widget.SearchView;
+import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
+
+import java.util.ArrayList;
+
+public class MainActivity extends AppCompatActivity {
+    EditText editTextItem;
+    Button btnAdd;
+    ListView listView;
+    SearchView searchView;
+
+    ArrayList<String> itemList;
+    ArrayAdapter<String> adapter;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        editTextItem = findViewById(R.id.editTextItem);
+        btnAdd = findViewById(R.id.btnAdd);
+        listView = findViewById(R.id.listView);
+        searchView = findViewById(R.id.searchView);
+
+        itemList = new ArrayList<>();
+        adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, itemList);
+        listView.setAdapter(adapter);
+
+        // Insert an item
+        btnAdd.setOnClickListener(v -> {
+            String item = editTextItem.getText().toString().trim();
+            if (!item.isEmpty()) {
+                itemList.add(item);
+                adapter.notifyDataSetChanged();
+                editTextItem.setText("");
+                Toast.makeText(MainActivity.this, "Item Added", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(MainActivity.this, "Enter item name", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        // Delete an item on click
+        listView.setOnItemClickListener((parent, view, position, id) -> {
+            itemList.remove(position);
+            adapter.notifyDataSetChanged();
+            Toast.makeText(MainActivity.this, "Item Deleted", Toast.LENGTH_SHORT).show();
+        });
+
+        // Search items
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                adapter.getFilter().filter(newText);
+                return false;
+            }
+        });
+    }
+}
